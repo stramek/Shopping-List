@@ -1,0 +1,71 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
+    defaultConfig {
+        applicationId "pl.marcinstramowski.shoppinglist"
+        minSdkVersion 17
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation"org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    // Unit tests
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-core:2.13.0'
+    testImplementation ("com.nhaarman:mockito-kotlin-kt1.1:1.5.0") {
+        exclude module: 'kotlin-stdlib'
+        exclude module: 'kotlin-reflect'
+    }
+
+    // Android tests
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    // Dependency injection
+    kapt "com.google.dagger:dagger-compiler:2.14.1"
+    implementation "com.google.dagger:dagger:2.14.1"
+    implementation "com.google.dagger:dagger-android:2.14.1"
+    implementation "com.google.dagger:dagger-android-support:2.14.1"
+    kapt "com.google.dagger:dagger-android-processor:2.14.1"
+
+    // Useful extensions
+    implementation "org.jetbrains.anko:anko-common:0.10.3"
+    implementation "org.jetbrains.anko:anko-design:0.10.3"
+    implementation "org.jetbrains.anko:anko-support-v4-commons:0.10.3"
+
+    // RxJava
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'com.jakewharton.rxbinding2:rxbinding-kotlin:2.1.0'
+
+    // leak detection
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
+
+    // Logs
+    implementation 'com.jakewharton.timber:timber:4.6.0'
+
+    // Database
+    implementation "android.arch.persistence.room:runtime:1.0.0"
+    kapt "android.arch.persistence.room:compiler:1.0.0"
+    implementation "android.arch.persistence.room:rxjava2:1.0.0"
+}
