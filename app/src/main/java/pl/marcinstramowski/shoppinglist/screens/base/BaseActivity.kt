@@ -4,8 +4,7 @@ import android.os.Bundle
 import dagger.android.support.DaggerAppCompatActivity
 
 /**
- * Base application activity defining [BasePresenter] lifecycle methods
- * such as [onCreate], [onStart], [onStop] or [onDestroy]
+ * Base application activity
  */
 abstract class BaseActivity<out T : BaseContract.Presenter> : DaggerAppCompatActivity(), BaseContract.View<T> {
 
@@ -18,23 +17,27 @@ abstract class BaseActivity<out T : BaseContract.Presenter> : DaggerAppCompatAct
         super.onCreate(savedInstanceState)
         setContentView(contentViewId)
         onCreated(savedInstanceState)
-        presenter.onCreate()
     }
 
     abstract fun onCreated(savedInstanceState: Bundle?)
 
+
     override fun onStart() {
         super.onStart()
-        presenter.onStart()
+        presenter.onAttach()
     }
 
     override fun onStop() {
-        presenter.onStop()
+        presenter.onDetach()
         super.onStop()
     }
 
-    override fun onDestroy() {
-        presenter.onDestroy()
-        super.onDestroy()
+    /**
+     * Sets (no back stack) passed [fragment] to view of assigned [containerId] without animation.
+     */
+    fun <T : BaseFragment<*>> setFragmentNoAnimation(fragment: T, containerId: Int) {
+        supportFragmentManager.beginTransaction().apply { replace(containerId, fragment) }.commit()
     }
+
+
 }

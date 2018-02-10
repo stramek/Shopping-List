@@ -1,7 +1,7 @@
 package pl.marcinstramowski.shoppinglist.screens.base
 
 /**
- * Contract interfaces between [BaseActivity] or [BaseActivity] and [BasePresenter]
+ * Contract interfaces between [BaseActivity] or [BaseActivity]
  */
 interface BaseContract {
 
@@ -13,13 +13,9 @@ interface BaseContract {
 
     interface Presenter {
 
-        fun onCreate() {}
+        fun onAttach()
 
-        fun onDestroy() {}
-
-        fun onStart() {}
-
-        fun onStop() {}
+        fun onDetach()
 
     }
 }

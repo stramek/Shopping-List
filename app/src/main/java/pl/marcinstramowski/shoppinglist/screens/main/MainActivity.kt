@@ -3,6 +3,7 @@ package pl.marcinstramowski.shoppinglist.screens.main
 import android.os.Bundle
 import pl.marcinstramowski.shoppinglist.R
 import pl.marcinstramowski.shoppinglist.screens.base.BaseActivity
+import pl.marcinstramowski.shoppinglist.screens.main.currentLists.CurrentListsFragment
 import javax.inject.Inject
 
 class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View {
@@ -12,6 +13,6 @@ class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View {
     override val contentViewId = R.layout.activity_main
 
     override fun onCreated(savedInstanceState: Bundle?) {
-
+        savedInstanceState ?: setFragmentNoAnimation(CurrentListsFragment(), R.id.container)
     }
 }

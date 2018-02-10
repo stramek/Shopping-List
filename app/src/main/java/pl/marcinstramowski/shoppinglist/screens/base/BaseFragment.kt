@@ -7,8 +7,7 @@ import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 
 /**
- * Base application fragment defining [BasePresenter] lifecycle methods
- * such as [onCreate], [onStart], [onStop] or [onDestroy]
+ * Base application fragment
  */
 abstract class BaseFragment<out T : BaseContract.Presenter> : DaggerFragment(),
     BaseContract.View<T> {
@@ -28,23 +27,17 @@ abstract class BaseFragment<out T : BaseContract.Presenter> : DaggerFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         onCreated(savedInstanceState)
-        presenter.onCreate()
     }
 
     abstract fun onCreated(savedInstanceState: Bundle?)
 
     override fun onStart() {
         super.onStart()
-        presenter.onStart()
+        presenter.onAttach()
     }
 
     override fun onStop() {
-        presenter.onStop()
+        presenter.onDetach()
         super.onStop()
-    }
-
-    override fun onDestroy() {
-        presenter.onDestroy()
-        super.onDestroy()
     }
 }

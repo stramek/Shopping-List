@@ -8,19 +8,11 @@ import javax.inject.Inject
  */
 class MainPresenter @Inject constructor(val view: MainContract.View) : MainContract.Presenter {
 
-    override fun onCreate() {
-        Timber.i("onCreate")
+    override fun onAttach() {
+        Timber.i("onAttach")
     }
 
-    override fun onDestroy() {
-        Timber.i("onDestroy")
-    }
-
-    override fun onStart() {
-        Timber.i("onStart")
-    }
-
-    override fun onStop() {
-        Timber.i("onStop")
+    override fun onDetach() {
+        Timber.i("onDetach")
     }
 }
