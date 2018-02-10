@@ -31,13 +31,4 @@ abstract class BaseActivity<out T : BaseContract.Presenter> : DaggerAppCompatAct
         presenter.onDetach()
         super.onStop()
     }
-
-    /**
-     * Sets (no back stack) passed [fragment] to view of assigned [containerId] without animation.
-     */
-    fun <T : BaseFragment<*>> setFragmentNoAnimation(fragment: T, containerId: Int) {
-        supportFragmentManager.beginTransaction().apply { replace(containerId, fragment) }.commit()
-    }
-
-
 }

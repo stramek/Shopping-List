@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Shopping List</string>
+
+    <string name="current_lists_title">Current</string>
+    <string name="archived_lists_title">Archived</string>
+
 </resources>

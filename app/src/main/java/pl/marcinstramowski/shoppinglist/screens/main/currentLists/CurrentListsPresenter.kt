@@ -56,8 +56,8 @@ class CurrentListsPresenter @Inject constructor(
     override fun onRemoveClick() {
         Completable
             .fromAction {
-                //database.shoppingListDao().deleteAll()
-                database.shoppingListDao().deleteShoppingListItems(500)
+                database.shoppingListDao().deleteAll()
+//                database.shoppingListDao().deleteShoppingListItems(500)
             }
             .subscribeOn(schedulers.io())
             .subscribe()

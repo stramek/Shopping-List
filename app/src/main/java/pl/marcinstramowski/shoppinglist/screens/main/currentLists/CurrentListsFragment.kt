@@ -6,7 +6,9 @@ import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import com.github.nitrico.lastadapter.LastAdapter
 import com.github.nitrico.lastadapter.StableId
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_current_lists.*
+import org.jetbrains.anko.design.longSnackbar
 import pl.marcinstramowski.shoppinglist.BR
 import pl.marcinstramowski.shoppinglist.R
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
