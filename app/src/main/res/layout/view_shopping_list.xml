@@ -6,7 +6,7 @@
 
         <variable
             name="item"
-            type="pl.marcinstramowski.shoppinglist.database.model.ShoppingList" />
+            type="pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems" />
     </data>
 
     <LinearLayout
@@ -18,9 +18,30 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@{item.listName}"
-            android:textSize="22sp"
-            tools:text="Test" />
+            android:text="@{String.valueOf(item.getUniqueId)}"
+            android:textSize="18sp"
+            tools:text="id" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{item.shoppingList.listName}"
+            android:textSize="18sp"
+            tools:text="Shopping list name" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:text="@{item.shoppingList.lastModificationDate.toString}"
+            tools:text="Last modification date" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{String.valueOf(item.shoppingItems.size)}"
+            android:textSize="18sp"
+            tools:text="Number of items" />
 
     </LinearLayout>
 

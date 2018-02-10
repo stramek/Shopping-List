@@ -1,6 +1,7 @@
 package pl.marcinstramowski.shoppinglist.screens.main.currentLists
 
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingList
+import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
 import pl.marcinstramowski.shoppinglist.screens.base.BaseContract
 
 /**
@@ -9,7 +10,7 @@ import pl.marcinstramowski.shoppinglist.screens.base.BaseContract
 interface CurrentListsContract {
 
     interface View : BaseContract.View<Presenter> {
-        fun updateShoppingLists(shoppingLists: List<ShoppingList>)
+        fun updateShoppingLists(shoppingLists: List<ShoppingListWithItems>)
     }
 
     interface Presenter : BaseContract.Presenter {

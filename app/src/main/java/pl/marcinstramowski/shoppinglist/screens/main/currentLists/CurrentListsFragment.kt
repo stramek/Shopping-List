@@ -5,14 +5,14 @@ import android.support.v7.util.DiffUtil
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import com.github.nitrico.lastadapter.LastAdapter
+import com.github.nitrico.lastadapter.StableId
 import kotlinx.android.synthetic.main.fragment_current_lists.*
 import pl.marcinstramowski.shoppinglist.BR
 import pl.marcinstramowski.shoppinglist.R
-import pl.marcinstramowski.shoppinglist.database.model.ShoppingList
+import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
 import pl.marcinstramowski.shoppinglist.databinding.ViewShoppingListBinding
 import pl.marcinstramowski.shoppinglist.screens.base.BaseFragment
 import pl.marcinstramowski.shoppinglist.utils.GenericDiffCallback
-import pl.marcinstramowski.shoppinglist.utils.UniqueId
 import javax.inject.Inject
 
 /**
@@ -24,7 +24,7 @@ class CurrentListsFragment : BaseFragment<CurrentListsContract.Presenter>(), Cur
     override val contentViewId = R.layout.fragment_current_lists
 
     private lateinit var lastAdapter: LastAdapter
-    private val adapterList = ArrayList<UniqueId>()
+    private val adapterList = ArrayList<ShoppingListWithItems>()
 
     override fun onCreated(savedInstanceState: Bundle?) {
         addItem.setOnClickListener { presenter.onAddItemClick() }
@@ -36,15 +36,14 @@ class CurrentListsFragment : BaseFragment<CurrentListsContract.Presenter>(), Cur
         list_container.layoutManager = LinearLayoutManager(context)
         list_container.addItemDecoration(DividerItemDecoration(context, DividerItemDecoration.VERTICAL))
         lastAdapter = LastAdapter(adapterList, BR.item)
-            .map<ShoppingList, ViewShoppingListBinding>(R.layout.view_shopping_list) {
-
-            }
+            .map<ShoppingListWithItems, ViewShoppingListBinding>(R.layout.view_shopping_list)
             .into(list_container)
     }
 
-    override fun updateShoppingLists(shoppingLists: List<ShoppingList>) {
+    override fun updateShoppingLists(shoppingLists: List<ShoppingListWithItems>) {
         val diffCallback = GenericDiffCallback(adapterList, shoppingLists)
         DiffUtil.calculateDiff(diffCallback).dispatchUpdatesTo(lastAdapter)
         adapterList.apply { clear() }.addAll(shoppingLists)
+        list_container.smoothScrollToPosition(0)
     }
 }

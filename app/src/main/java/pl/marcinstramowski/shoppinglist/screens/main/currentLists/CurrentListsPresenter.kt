@@ -2,6 +2,7 @@ package pl.marcinstramowski.shoppinglist.screens.main.currentLists
 
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.rxkotlin.subscribeBy
 import pl.marcinstramowski.shoppinglist.database.AppDatabase
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingList
 import pl.marcinstramowski.shoppinglist.rxSchedulers.SchedulerProvider
@@ -28,27 +29,37 @@ class CurrentListsPresenter @Inject constructor(
     }
 
     override fun onAddItemClick() {
-        Completable.fromAction {
-            database.shoppingListDao().insert(ShoppingList("TestTest ${System.currentTimeMillis()}"))
-        }
-            .subscribeOn(schedulers.io()).subscribe()
+        val item = ShoppingList("lol")
 
-    }
+//      val item = ShoppingItem(500, "Test123")
+
+        Completable
+            .fromAction {
+                database.shoppingListDao().insert(item)
+            }
+            .subscribeOn(schedulers.io())
+            .subscribe()
+}
 
     private fun subscribeShoppingLists() {
-        compositeDisposable.add(database.shoppingListDao().getAll()
-            .subscribeOn(schedulers.io())
-            .observeOn(schedulers.ui())
-            .subscribe({ shoppingLists ->
-                Timber.e("Got ${shoppingLists.size} shopping lists!")
-                view.updateShoppingLists(shoppingLists)
-            }, { error -> Timber.e(error) })
+        compositeDisposable.add(
+            database.shoppingListDao().getAllWithItems()
+                .subscribeOn(schedulers.io())
+                .observeOn(schedulers.ui())
+                .subscribeBy(
+                    onNext = { shoppingLists -> view.updateShoppingLists(shoppingLists) },
+                    onError = { error -> Timber.e(error) }
+                )
         )
     }
 
     override fun onRemoveClick() {
-        Completable.fromAction {
-            database.shoppingListDao().deleteAll()
-        }.subscribeOn(schedulers.io()).subscribe()
+        Completable
+            .fromAction {
+                //database.shoppingListDao().deleteAll()
+                database.shoppingListDao().deleteShoppingListItems(500)
+            }
+            .subscribeOn(schedulers.io())
+            .subscribe()
     }
 }
