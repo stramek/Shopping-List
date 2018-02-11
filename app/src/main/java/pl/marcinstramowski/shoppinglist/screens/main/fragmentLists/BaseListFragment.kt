@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import com.github.nitrico.lastadapter.LastAdapter
 import kotlinx.android.synthetic.main.fragment_list.*
 import pl.marcinstramowski.shoppinglist.BR
@@ -37,16 +38,21 @@ abstract class BaseListFragment<out T : BaseContract.Presenter> : BaseFragment<T
         lastAdapter = LastAdapter(adapterList, BR.item)
             .map<ShoppingListWithItems, ItemShoppingListBinding>(R.layout.item_shopping_list) {
                 onClick { it.binding.item?.let { onItemClick(it) } }
+                onLongClick { it.binding.item?.let { onLongItemClick(it) } }
             }
             .into(listContainer)
     }
 
     abstract fun onItemClick(shoppingListWithItems: ShoppingListWithItems)
 
+    abstract fun onLongItemClick(shoppingListWithItems: ShoppingListWithItems)
+
     @CallSuper
     fun updateList(shoppingLists: List<ShoppingListWithItems>) {
+        listContainer.visibility = View.VISIBLE
         val diffCallback = GenericDiffCallback(adapterList, shoppingLists)
         DiffUtil.calculateDiff(diffCallback).dispatchUpdatesTo(lastAdapter)
         adapterList.apply { clear() }.addAll(shoppingLists)
+        listContainer.scrollToPosition(0)
     }
 }

@@ -24,4 +24,8 @@ class CurrentListsFragment : BaseListFragment<CurrentListsContract.Presenter>(),
             startActivity<ListDetailsActivity>(ListDetailsActivity.SHOPPING_LIST_ID_KEY to it)
         }
     }
+
+    override fun onLongItemClick(shoppingListWithItems: ShoppingListWithItems) {
+        presenter.archiveList(shoppingListWithItems)
+    }
 }

@@ -17,6 +17,10 @@ class ArchivedListsFragment : BaseListFragment<ArchivedListsContract.Presenter>(
     }
 
     override fun onItemClick(shoppingListWithItems: ShoppingListWithItems) {
+
+    }
+
+    override fun onLongItemClick(shoppingListWithItems: ShoppingListWithItems) {
         presenter.deleteList(shoppingListWithItems)
     }
 }

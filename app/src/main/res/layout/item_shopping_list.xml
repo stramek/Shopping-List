@@ -39,6 +39,8 @@
                 android:layout_marginTop="@dimen/margin_small"
                 android:visibility="@{item.numberOfNotCompletedItems == 0 ? View.GONE : View.VISIBLE}"
                 app:setItemsText="@{item.shoppingItems}"
+                android:maxLines="2"
+                android:ellipsize="end"
                 tools:text="Milk, Carrots, Meat" />
 
             <ProgressBar

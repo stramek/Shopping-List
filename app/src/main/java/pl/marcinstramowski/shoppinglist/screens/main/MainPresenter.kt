@@ -1,6 +1,8 @@
 package pl.marcinstramowski.shoppinglist.screens.main
 
+import io.reactivex.Completable
 import pl.marcinstramowski.shoppinglist.database.AppDatabase
+import pl.marcinstramowski.shoppinglist.database.model.ShoppingList
 import pl.marcinstramowski.shoppinglist.rxSchedulers.SchedulerProvider
 import javax.inject.Inject
 
@@ -22,20 +24,12 @@ class MainPresenter @Inject constructor(
     }
 
     override fun onFabButtonClick() {
-        /*Completable.fromAction {
-            val listId = database.shoppingListDao().insertOrUpdate(ShoppingList("Shopping list name"))
-            database.shoppingListDao().insertOrUpdate(
-                listOf(
-                    ShoppingItem(listId, "Item name1").apply { isCompleted = Random().nextBoolean() },
-                    ShoppingItem(listId, "Item name2").apply { isCompleted = Random().nextBoolean() },
-                    ShoppingItem(listId, "Item name3").apply { isCompleted = Random().nextBoolean() },
-                    ShoppingItem(listId, "Item name4").apply { isCompleted = Random().nextBoolean() },
-                    ShoppingItem(listId, "Item name5").apply { isCompleted = Random().nextBoolean() }
-                )
-            )
-        }
-            .subscribeOn(schedulers.io())
-            .subscribe()*/
-        view.showAddNewListActivity()
+        view.showAddNewListDialog()
+    }
+
+    override fun createNewList(listName: String) {
+        Completable.fromAction {
+            database.shoppingListDao().insertOrUpdate(ShoppingList(listName))
+        }.subscribeOn(schedulers.io()).subscribe()
     }
 }

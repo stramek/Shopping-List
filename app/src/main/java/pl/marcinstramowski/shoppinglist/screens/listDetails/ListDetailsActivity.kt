@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
+import android.view.View
 import android.view.inputmethod.EditorInfo
 import com.github.nitrico.lastadapter.LastAdapter
 import kotlinx.android.synthetic.main.activity_list_details.*
@@ -80,6 +81,7 @@ class ListDetailsActivity : BaseActivity<ListDetailsContract.Presenter>(), ListD
     }
 
     override fun updateList(shoppingLists: List<ShoppingItem>) {
+        listContainer.visibility = View.VISIBLE
         val diffCallback = GenericDiffCallback(adapterList, shoppingLists)
         DiffUtil.calculateDiff(diffCallback).dispatchUpdatesTo(lastAdapter)
         adapterList.apply { clear() }.addAll(shoppingLists)
