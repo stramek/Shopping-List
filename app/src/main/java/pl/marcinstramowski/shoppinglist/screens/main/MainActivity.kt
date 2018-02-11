@@ -7,7 +7,7 @@ import org.jetbrains.anko.startActivity
 import pl.marcinstramowski.shoppinglist.R
 import pl.marcinstramowski.shoppinglist.extensions.setGone
 import pl.marcinstramowski.shoppinglist.screens.base.BaseActivity
-import pl.marcinstramowski.shoppinglist.screens.ListDetails.ListDetailsActivity
+import pl.marcinstramowski.shoppinglist.screens.listDetails.ListDetailsActivity
 import pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.ShoppingListPagerAdapter
 import pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.ShoppingListPages
 import javax.inject.Inject
@@ -22,7 +22,11 @@ class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View {
 
     override fun onCreated(savedInstanceState: Bundle?) {
         configureViewPager()
-        fab.setOnClickListener { startActivity<ListDetailsActivity>() }
+        fab.setOnClickListener { presenter.onFabButtonClick() }
+    }
+
+    override fun showAddNewListActivity() {
+        startActivity<ListDetailsActivity>()
     }
 
     private fun configureViewPager() {

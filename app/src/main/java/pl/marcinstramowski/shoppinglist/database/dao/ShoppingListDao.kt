@@ -18,16 +18,20 @@ abstract class ShoppingListDao {
     abstract fun getArchivedListsWithItems(): Flowable<List<ShoppingListWithItems>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertOrUpdate(shoppingList: ShoppingList)
+    abstract fun insertOrUpdate(shoppingList: ShoppingList): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertOrUpdate(vararg shoppingItems: ShoppingItem)
+    abstract fun insertOrUpdate(vararg shoppingItems: ShoppingItem): List<Long>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertOrUpdate(shoppingItems: List<ShoppingItem>)
+    abstract fun insertOrUpdate(shoppingItems: List<ShoppingItem>): List<Long>
 
     @Query("SELECT * FROM shoppingList WHERE id = :id LIMIT 1")
     abstract fun getShoppingListById(id: Long): Flowable<ShoppingList>
+
+    @Transaction
+    @Query("SELECT * FROM shoppingList WHERE id = :id LIMIT 1")
+    abstract fun getShoppingListWithItemsById(id: Long): Flowable<ShoppingListWithItems>
 
     @Delete
     abstract fun delete(vararg shoppingLists: ShoppingList)
@@ -47,6 +51,9 @@ abstract class ShoppingListDao {
     @Query("UPDATE shoppingList SET archived = 1 WHERE id IN (:shoppingListIds)")
     abstract fun archiveShoppingLists(vararg shoppingListIds: Long)
 
+    @Query("UPDATE shoppingItem SET isCompleted = :completed WHERE id = :shoppingItemId")
+    abstract fun setShoppingItemAsCompleted(shoppingItemId: Long, completed: Boolean)
+
     @Transaction
     open fun deleteShoppingListWithItems(shoppingList: ShoppingList) {
         deleteShoppingListItems(shoppingList.id!!)
@@ -54,8 +61,9 @@ abstract class ShoppingListDao {
     }
 
     @Transaction
-    open fun insertOrUpdate(shoppingListWithItems: ShoppingListWithItems) {
-        insertOrUpdate(shoppingListWithItems.shoppingList!!)
+    open fun insertOrUpdate(shoppingListWithItems: ShoppingListWithItems): Long {
+        val listId = insertOrUpdate(shoppingListWithItems.shoppingList!!)
         insertOrUpdate(shoppingListWithItems.shoppingItems)
+        return listId
     }
 }

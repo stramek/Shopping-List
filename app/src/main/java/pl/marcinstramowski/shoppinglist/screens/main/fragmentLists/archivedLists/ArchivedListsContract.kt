@@ -12,5 +12,7 @@ interface ArchivedListsContract {
         fun updateShoppingLists(shoppingLists: List<ShoppingListWithItems>)
     }
 
-    interface Presenter : BaseContract.Presenter
+    interface Presenter : BaseContract.Presenter {
+        fun deleteList(shoppingListWithItems: ShoppingListWithItems)
+    }
 }
