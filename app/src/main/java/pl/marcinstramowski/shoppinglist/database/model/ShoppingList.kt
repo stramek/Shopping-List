@@ -11,6 +11,7 @@ data class ShoppingList(
     val listName: String
 ) {
     @PrimaryKey(autoGenerate = true) var id: Long? = null
+    var archived: Boolean = false
 
     @TypeConverters(DateConverter::class) var lastModificationDate: Date? = Date()
 }

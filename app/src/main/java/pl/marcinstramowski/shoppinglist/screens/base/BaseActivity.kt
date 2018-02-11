@@ -1,7 +1,10 @@
 package pl.marcinstramowski.shoppinglist.screens.base
 
 import android.os.Bundle
+import android.support.annotation.CallSuper
 import dagger.android.support.DaggerAppCompatActivity
+import kotlinx.android.synthetic.main.activity_main.*
+import pl.marcinstramowski.shoppinglist.R
 
 /**
  * Base application activity
@@ -13,21 +16,22 @@ abstract class BaseActivity<out T : BaseContract.Presenter> : DaggerAppCompatAct
      */
     abstract val contentViewId : Int
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    @CallSuper override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(contentViewId)
+        setSupportActionBar(toolbar)
         onCreated(savedInstanceState)
     }
 
     abstract fun onCreated(savedInstanceState: Bundle?)
 
 
-    override fun onStart() {
+    @CallSuper override fun onStart() {
         super.onStart()
         presenter.onAttach()
     }
 
-    override fun onStop() {
+    @CallSuper override fun onStop() {
         presenter.onDetach()
         super.onStop()
     }

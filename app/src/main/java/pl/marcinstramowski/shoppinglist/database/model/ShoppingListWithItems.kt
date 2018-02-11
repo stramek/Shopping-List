@@ -9,7 +9,13 @@ class ShoppingListWithItems : UniqueId {
     @Embedded var shoppingList: ShoppingList? = null
 
     @Relation(parentColumn = "id", entityColumn = "shoppingListId")
-    var shoppingItems: List<ShoppingItem>? = null
+    var shoppingItems: List<ShoppingItem> = listOf()
+
+    fun getNumberOfCompletedItems() = shoppingItems.count { it.isCompleted }
+
+    fun getNumberOfNotCompletedItems() = shoppingItems.count { !it.isCompleted }
+
+    fun getNumberOfItems() = shoppingItems.size
 
     override fun getUniqueId() = shoppingList!!.id!!
 
@@ -27,7 +33,7 @@ class ShoppingListWithItems : UniqueId {
 
     override fun hashCode(): Int {
         var result = shoppingList?.hashCode() ?: 0
-        result = 31 * result + (shoppingItems?.hashCode() ?: 0)
+        result = 31 * result + shoppingItems.hashCode()
         return result
     }
 }

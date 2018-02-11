@@ -5,6 +5,7 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.util.AttributeSet
 import android.view.View
+import timber.log.Timber
 
 @Suppress("unused")
 class ScrollAwareFabBehaviour(context: Context, attrs: AttributeSet) : CoordinatorLayout.Behavior<FloatingActionButton>() {

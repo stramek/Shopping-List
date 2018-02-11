@@ -1,10 +1,10 @@
-package pl.marcinstramowski.shoppinglist.screens.main.currentLists
+package pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.currentLists
 
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import pl.marcinstramowski.shoppinglist.database.AppDatabase
-import pl.marcinstramowski.shoppinglist.database.model.ShoppingList
+import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
 import pl.marcinstramowski.shoppinglist.rxSchedulers.SchedulerProvider
 import timber.log.Timber
 import javax.inject.Inject
@@ -28,22 +28,9 @@ class CurrentListsPresenter @Inject constructor(
         compositeDisposable.clear()
     }
 
-    override fun onAddItemClick() {
-        val item = ShoppingList("lol")
-
-//      val item = ShoppingItem(500, "Test123")
-
-        Completable
-            .fromAction {
-                database.shoppingListDao().insert(item)
-            }
-            .subscribeOn(schedulers.io())
-            .subscribe()
-}
-
     private fun subscribeShoppingLists() {
         compositeDisposable.add(
-            database.shoppingListDao().getAllWithItems()
+            database.shoppingListDao().getCurrentListsWithItems()
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
                 .subscribeBy(
@@ -53,13 +40,11 @@ class CurrentListsPresenter @Inject constructor(
         )
     }
 
-    override fun onRemoveClick() {
+    override fun archiveList(shoppingListWithItems: ShoppingListWithItems) {
         Completable
-            .fromAction {
-                database.shoppingListDao().deleteAll()
-//                database.shoppingListDao().deleteShoppingListItems(500)
-            }
+            .fromAction { database.shoppingListDao().archiveShoppingList(shoppingListWithItems.getUniqueId()) }
             .subscribeOn(schedulers.io())
             .subscribe()
+
     }
 }

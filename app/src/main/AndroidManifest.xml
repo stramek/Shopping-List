@@ -22,9 +22,13 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".screens.main.MainActivity" />
+        <activity
+            android:name=".screens.main.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".screens.main.ListDetails.ListDetailsActivity" />
+        <activity
+            android:name="pl.marcinstramowski.shoppinglist.screens.ListDetails.ListDetailsActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
 
