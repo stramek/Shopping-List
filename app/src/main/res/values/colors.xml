@@ -6,6 +6,8 @@
 
     <color name="splashBackground">#fd5e22</color>
 
+    <color name="addItemCardBackground">#FAFAFA</color>
+
     <color name="lightGrey">#AAAAAA</color>
     <color name="hintColor">#DDDDDD</color>
 </resources>
