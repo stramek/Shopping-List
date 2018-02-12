@@ -3,5 +3,10 @@
 
     <string name="current_lists_title">Current</string>
     <string name="archived_lists_title">Archived</string>
+    <string name="list_details_type_product_do_add">Type product do add</string>
+    <string name="add_list_insert_name">Insert shopping list name</string>
+    <string name="ok">OK</string>
+    <string name="cancel">cancel</string>
+    <string name="dialog_add_list_name_hint">List name</string>
 
 </resources>

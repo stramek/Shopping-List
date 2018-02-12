@@ -2,12 +2,13 @@ package pl.marcinstramowski.shoppinglist.screens.main
 
 import android.os.Bundle
 import android.support.v4.view.ViewPager
+import android.support.v7.app.AlertDialog
+import android.support.v7.widget.AppCompatEditText
+import android.view.LayoutInflater
 import kotlinx.android.synthetic.main.activity_main.*
-import org.jetbrains.anko.startActivity
 import pl.marcinstramowski.shoppinglist.R
 import pl.marcinstramowski.shoppinglist.extensions.setGone
 import pl.marcinstramowski.shoppinglist.screens.base.BaseActivity
-import pl.marcinstramowski.shoppinglist.screens.ListDetails.ListDetailsActivity
 import pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.ShoppingListPagerAdapter
 import pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.ShoppingListPages
 import javax.inject.Inject
@@ -22,7 +23,23 @@ class MainActivity : BaseActivity<MainContract.Presenter>(), MainContract.View {
 
     override fun onCreated(savedInstanceState: Bundle?) {
         configureViewPager()
-        fab.setOnClickListener { startActivity<ListDetailsActivity>() }
+        fab.setOnClickListener { presenter.onFabButtonClick() }
+    }
+
+    override fun showAddNewListDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.add_list_insert_name))
+            .setView(LayoutInflater.from(this).inflate(R.layout.dialog_add_list, null))
+            .setPositiveButton(R.string.ok, { dialog, which ->
+                val listNameEditText = (dialog as AlertDialog).findViewById<AppCompatEditText>(R.id.listNameEditText)
+                val text = listNameEditText?.text.toString()
+                if (text.isNotBlank()) {
+                    presenter.createNewList(text)
+                }
+            })
+            .setNegativeButton(R.string.cancel, null)
+            .create()
+            .show()
     }
 
     private fun configureViewPager() {

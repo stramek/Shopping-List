@@ -1,8 +1,10 @@
 package pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.archivedLists
 
+import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
 import pl.marcinstramowski.shoppinglist.database.AppDatabase
+import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
 import pl.marcinstramowski.shoppinglist.rxSchedulers.SchedulerProvider
 import timber.log.Timber
 import javax.inject.Inject
@@ -36,5 +38,21 @@ class ArchivedListsPresenter @Inject constructor(
                     onError = { error -> Timber.e(error) }
                 )
         )
+    }
+
+    override fun deleteList(shoppingListWithItems: ShoppingListWithItems) {
+        Completable.fromAction {
+            database.shoppingListDao().deleteShoppingListWithItems(shoppingListWithItems.shoppingList!!)
+        }.subscribeOn(schedulers.io()).subscribe()
+    }
+
+    override fun onShoppingListClick(shoppingListWithItems: ShoppingListWithItems) {
+        shoppingListWithItems.shoppingList?.id?.let {
+            view.showListDetailsScreen(it)
+        }
+    }
+
+    override fun onLongShoppingListClock(shoppingListWithItems: ShoppingListWithItems) {
+
     }
 }

@@ -45,6 +45,15 @@ class CurrentListsPresenter @Inject constructor(
             .fromAction { database.shoppingListDao().archiveShoppingList(shoppingListWithItems.getUniqueId()) }
             .subscribeOn(schedulers.io())
             .subscribe()
+    }
+
+    override fun onShoppingListClick(shoppingListWithItems: ShoppingListWithItems) {
+        shoppingListWithItems.shoppingList?.id?.let {
+            view.showListDetailsScreen(it)
+        }
+    }
+
+    override fun onLongShoppingListClock(shoppingListWithItems: ShoppingListWithItems) {
 
     }
 }

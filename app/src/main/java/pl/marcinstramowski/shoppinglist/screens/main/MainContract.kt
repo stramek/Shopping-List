@@ -9,9 +9,15 @@ interface MainContract {
 
     interface View : BaseContract.View<Presenter> {
 
+        fun showAddNewListDialog()
+
     }
 
     interface Presenter : BaseContract.Presenter {
+
+        fun onFabButtonClick()
+
+        fun createNewList(listName: String)
 
     }
 }

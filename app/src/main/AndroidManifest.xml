@@ -27,7 +27,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
-            android:name="pl.marcinstramowski.shoppinglist.screens.ListDetails.ListDetailsActivity"
+            android:name="pl.marcinstramowski.shoppinglist.screens.listDetails.ListDetailsActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
     </application>
