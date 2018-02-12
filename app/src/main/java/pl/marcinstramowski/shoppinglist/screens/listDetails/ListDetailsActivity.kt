@@ -18,6 +18,7 @@ import pl.marcinstramowski.shoppinglist.database.model.ShoppingItem
 import pl.marcinstramowski.shoppinglist.databinding.ItemShoppingItemBinding
 import pl.marcinstramowski.shoppinglist.extensions.clear
 import pl.marcinstramowski.shoppinglist.extensions.setVisible
+import pl.marcinstramowski.shoppinglist.extensions.showTextInputDialog
 import pl.marcinstramowski.shoppinglist.screens.base.BaseActivity
 import pl.marcinstramowski.shoppinglist.utils.GenericDiffCallback
 import javax.inject.Inject
@@ -90,15 +91,24 @@ class ListDetailsActivity : BaseActivity<ListDetailsContract.Presenter>(),
         lastAdapter = LastAdapter(adapterList, BR.item)
             .map<ShoppingItem, ItemShoppingItemBinding>(R.layout.item_shopping_item) {
                 onBind {
-                    configureShoppingItem(it.binding.removeButton, it.binding.root, it.binding.item)
+                    val removeButton = it.binding.removeButton
+                    val root = it.binding.root
+                    val item = it.binding.item
+                    item?.let {
+                        configureShoppingItem(removeButton, root, item)
+                        root.setOnLongClickListener {
+                            presenter.onLongShoppingItemClick(item)
+                            true
+                        }
+                    }
                 }
             }
             .into(listContainer)
     }
 
-    private fun configureShoppingItem(removeButton: ImageView, root: View, shoppingItem: ShoppingItem?) {
+    private fun configureShoppingItem(removeButton: ImageView, root: View, shoppingItem: ShoppingItem) {
         removeButton.setVisible(isEditable)
-        if (shoppingItem == null || !isEditable) return
+        if (!isEditable) return
         removeButton.setOnClickListener { presenter.removeShoppingItem(shoppingItem) }
         root.setOnClickListener { presenter.changeShoppingListCompletedState(shoppingItem) }
     }
@@ -112,5 +122,13 @@ class ListDetailsActivity : BaseActivity<ListDetailsContract.Presenter>(),
 
     private fun diasbleAddItemSection() {
         addItemSection.visibility = View.GONE
+    }
+
+    override fun showChangeItemNameDialog(shoppingItem: ShoppingItem) {
+        showTextInputDialog(
+            R.string.dialog_change_item_name, { text ->
+                presenter.changeShoppingItemName(shoppingItem, text)
+            }
+        )
     }
 }

@@ -22,6 +22,6 @@ interface ArchivedListsContract {
 
         fun onShoppingListClick(shoppingListWithItems: ShoppingListWithItems)
 
-        fun onLongShoppingListClock(shoppingListWithItems: ShoppingListWithItems)
+        fun onLongShoppingListClick(shoppingListWithItems: ShoppingListWithItems)
     }
 }

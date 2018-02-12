@@ -17,6 +17,8 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:orientation="horizontal"
+        android:clickable="true"
+        android:focusable="true"
         android:padding="@dimen/margin_normal">
 
         <android.support.v7.widget.AppCompatCheckBox

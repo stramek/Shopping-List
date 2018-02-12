@@ -23,7 +23,7 @@ class ArchivedListsFragment : BaseListFragment<ArchivedListsContract.Presenter>(
     }
 
     override fun onLongItemClick(shoppingListWithItems: ShoppingListWithItems) {
-        presenter.onLongShoppingListClock(shoppingListWithItems)
+        presenter.onLongShoppingListClick(shoppingListWithItems)
     }
 
     override fun showListDetailsScreen(shoppingListId: Long) {

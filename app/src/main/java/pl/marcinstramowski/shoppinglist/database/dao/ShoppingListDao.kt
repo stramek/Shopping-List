@@ -51,6 +51,9 @@ abstract class ShoppingListDao {
     @Query("UPDATE shoppingList SET archived = 1 WHERE id IN (:shoppingListIds)")
     abstract fun archiveShoppingLists(vararg shoppingListIds: Long)
 
+    @Query("UPDATE shoppingItem SET itemName = :newName WHERE id = :shoppingItemId")
+    abstract fun updateShoppingItemName(shoppingItemId: Long, newName: String)
+
     @Query("UPDATE shoppingList SET lastModificationDate = :modificationDate WHERE id = :shoppingListId")
     abstract fun updateShoppingListModification(shoppingListId: Long, modificationDate: Date = Date())
 
@@ -61,6 +64,12 @@ abstract class ShoppingListDao {
     @Query("SELECT * FROM shoppingItem WHERE shoppingListId = :shoppingListId ORDER BY isCompleted ASC, itemName ASC")
     abstract fun getShoppingItemsByParentId(shoppingListId: Long): Flowable<List<ShoppingItem>>
 
+
+    @Transaction
+    open fun updateShoppingItemNameRefreshTime(shoppingItem: ShoppingItem, newName: String) {
+        updateShoppingItemName(shoppingItem.id!!, newName)
+        updateShoppingListModification(shoppingItem.shoppingListId)
+    }
 
     @Transaction
     open fun insertOrUpdateRefreshTime(shoppingItem: ShoppingItem) {

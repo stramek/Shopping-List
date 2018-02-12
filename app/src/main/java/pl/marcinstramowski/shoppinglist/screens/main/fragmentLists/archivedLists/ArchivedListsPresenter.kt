@@ -52,7 +52,7 @@ class ArchivedListsPresenter @Inject constructor(
         }
     }
 
-    override fun onLongShoppingListClock(shoppingListWithItems: ShoppingListWithItems) {
+    override fun onLongShoppingListClick(shoppingListWithItems: ShoppingListWithItems) {
 
     }
 }

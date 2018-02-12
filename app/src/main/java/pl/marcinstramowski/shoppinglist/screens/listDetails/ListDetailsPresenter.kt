@@ -92,7 +92,11 @@ class ListDetailsPresenter @Inject constructor(
 
     override fun changeShoppingItemName(shoppingItem: ShoppingItem, newName: String) {
         Completable.fromAction {
+            database.shoppingListDao().updateShoppingItemNameRefreshTime(shoppingItem, newName)
+        }.subscribeOn(schedulers.io()).subscribe()
+    }
 
-        }
+    override fun onLongShoppingItemClick(shoppingItem: ShoppingItem) {
+        view.showChangeItemNameDialog(shoppingItem)
     }
 }

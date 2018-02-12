@@ -19,6 +19,8 @@ interface ListDetailsContract {
 
         fun setAddNewItemVisible(visible: Boolean)
 
+        fun showChangeItemNameDialog(shoppingItem: ShoppingItem)
+
     }
 
     interface Presenter : BaseContract.Presenter {
@@ -34,6 +36,8 @@ interface ListDetailsContract {
         fun changeShoppingItemName(shoppingItem: ShoppingItem, newName: String)
 
         fun observeAddNewItemEditText(observable: InitialValueObservable<CharSequence>)
+
+        fun onLongShoppingItemClick(shoppingItem: ShoppingItem)
 
     }
 
