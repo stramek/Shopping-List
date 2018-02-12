@@ -71,7 +71,7 @@ class ListDetailsPresenter @Inject constructor(
         view.cleanAddNewItemField()
         if (shoppingItemName.isNotBlank()) {
             Completable.fromAction {
-                database.shoppingListDao().insertOrUpdate(
+                database.shoppingListDao().insertOrUpdateRefreshTime(
                     ShoppingItem(shoppingListId, shoppingItemName.capitalize())
                 )
             }.subscribeOn(schedulers.io()).subscribe()
@@ -80,13 +80,13 @@ class ListDetailsPresenter @Inject constructor(
 
     override fun removeShoppingItem(shoppingItem: ShoppingItem) {
         Completable.fromAction {
-            database.shoppingListDao().delete(shoppingItem)
+            database.shoppingListDao().deleteRefreshTime(shoppingItem)
         }.subscribeOn(schedulers.io()).subscribe()
     }
 
     override fun changeShoppingListCompletedState(shoppingItem: ShoppingItem) {
         Completable.fromAction {
-            database.shoppingListDao().setShoppingItemAsCompleted(shoppingItem.id!!, !shoppingItem.isCompleted)
+            database.shoppingListDao().setShoppingItemAsCompletedUpdateTime(shoppingItem, !shoppingItem.isCompleted)
         }.subscribeOn(schedulers.io()).subscribe()
     }
 

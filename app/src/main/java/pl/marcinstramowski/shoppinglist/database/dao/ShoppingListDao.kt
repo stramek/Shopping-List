@@ -2,21 +2,21 @@ package pl.marcinstramowski.shoppinglist.database.dao
 
 import android.arch.persistence.room.*
 import io.reactivex.Flowable
+import pl.marcinstramowski.shoppinglist.database.converters.DateConverter
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingItem
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingList
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
+import java.util.*
 
 @Dao
+@TypeConverters(DateConverter::class)
 abstract class ShoppingListDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertOrUpdate(shoppingList: ShoppingList): Long
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertOrUpdate(vararg shoppingItems: ShoppingItem): List<Long>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract fun insertOrUpdate(shoppingItems: List<ShoppingItem>): List<Long>
+    abstract fun insertOrUpdate(shoppingItem: ShoppingItem): Long
 
 
     @Delete
@@ -51,6 +51,9 @@ abstract class ShoppingListDao {
     @Query("UPDATE shoppingList SET archived = 1 WHERE id IN (:shoppingListIds)")
     abstract fun archiveShoppingLists(vararg shoppingListIds: Long)
 
+    @Query("UPDATE shoppingList SET lastModificationDate = :modificationDate WHERE id = :shoppingListId")
+    abstract fun updateShoppingListModification(shoppingListId: Long, modificationDate: Date = Date())
+
 
     @Query("UPDATE shoppingItem SET isCompleted = :completed WHERE id = :shoppingItemId")
     abstract fun setShoppingItemAsCompleted(shoppingItemId: Long, completed: Boolean)
@@ -60,15 +63,26 @@ abstract class ShoppingListDao {
 
 
     @Transaction
-    open fun deleteShoppingListWithItems(shoppingList: ShoppingList) {
-        deleteShoppingListItems(shoppingList.id!!)
-        delete(shoppingList)
+    open fun insertOrUpdateRefreshTime(shoppingItem: ShoppingItem) {
+        insertOrUpdate(shoppingItem)
+        updateShoppingListModification(shoppingItem.shoppingListId)
     }
 
     @Transaction
-    open fun insertOrUpdate(shoppingListWithItems: ShoppingListWithItems): Long {
-        val listId = insertOrUpdate(shoppingListWithItems.shoppingList!!)
-        insertOrUpdate(shoppingListWithItems.shoppingItems)
-        return listId
+    open fun deleteRefreshTime(shoppingItem: ShoppingItem) {
+        delete(shoppingItem)
+        updateShoppingListModification(shoppingItem.shoppingListId)
+    }
+
+    @Transaction
+    open fun setShoppingItemAsCompletedUpdateTime(shoppingItem: ShoppingItem, completed: Boolean) {
+        setShoppingItemAsCompleted(shoppingItem.id!!, completed)
+        updateShoppingListModification(shoppingItem.shoppingListId)
+    }
+
+    @Transaction
+    open fun deleteShoppingListWithItems(shoppingList: ShoppingList) {
+        deleteShoppingListItems(shoppingList.id!!)
+        delete(shoppingList)
     }
 }
