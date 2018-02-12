@@ -45,4 +45,14 @@ class ArchivedListsPresenter @Inject constructor(
             database.shoppingListDao().deleteShoppingListWithItems(shoppingListWithItems.shoppingList!!)
         }.subscribeOn(schedulers.io()).subscribe()
     }
+
+    override fun onShoppingListClick(shoppingListWithItems: ShoppingListWithItems) {
+        shoppingListWithItems.shoppingList?.id?.let {
+            view.showListDetailsScreen(it)
+        }
+    }
+
+    override fun onLongShoppingListClock(shoppingListWithItems: ShoppingListWithItems) {
+
+    }
 }

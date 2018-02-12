@@ -9,5 +9,6 @@
     <color name="addItemCardBackground">#FAFAFA</color>
 
     <color name="lightGrey">#AAAAAA</color>
-    <color name="hintColor">#DDDDDD</color>
+    <color name="defaultHintColor">#DDDDDD</color>
+    <color name="defaultTextColor">#808080</color>
 </resources>

@@ -15,29 +15,32 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
         android:orientation="horizontal"
         android:padding="@dimen/margin_normal">
 
         <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/taskCompleted"
+            style="@style/DefaultAppCompatCheckBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:checked="@{item.completed}"
+            android:clickable="false"
+            android:focusable="false"
             android:text="@{item.itemName}"
-            android:textSize="18sp"
             tools:text="This is product example" />
 
         <ImageView
             android:id="@+id/removeButton"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
+            android:layout_width="@dimen/list_item_icon_size"
+            android:layout_height="@dimen/list_item_icon_size"
             android:layout_gravity="center_vertical"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
             android:focusable="true"
-            android:padding="@dimen/margin_small"
+            android:padding="12dp"
             app:srcCompat="@drawable/ic_close_grey" />
 
     </LinearLayout>

@@ -9,10 +9,20 @@ import pl.marcinstramowski.shoppinglist.screens.base.BaseContract
 interface CurrentListsContract {
 
     interface View : BaseContract.View<Presenter> {
+
         fun updateShoppingLists(shoppingLists: List<ShoppingListWithItems>)
+
+        fun showListDetailsScreen(shoppingListId: Long)
+
     }
 
     interface Presenter : BaseContract.Presenter {
+
         fun archiveList(shoppingListWithItems: ShoppingListWithItems)
+
+        fun onShoppingListClick(shoppingListWithItems: ShoppingListWithItems)
+
+        fun onLongShoppingListClock(shoppingListWithItems: ShoppingListWithItems)
+
     }
 }

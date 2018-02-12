@@ -1,5 +1,6 @@
 package pl.marcinstramowski.shoppinglist.screens.listDetails
 
+import com.jakewharton.rxbinding2.InitialValueObservable
 import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
@@ -19,41 +20,60 @@ class ListDetailsPresenter @Inject constructor(
 ) : ListDetailsContract.Presenter {
 
     private val compositeDisposable = CompositeDisposable()
-    private var shoppingListId: Long = -1
 
-    override fun onAttach() {
 
-    }
+    override fun onAttach() {}
 
     override fun onDetach() {
         compositeDisposable.clear()
     }
 
-    override fun setupTargetShoppingListId(shoppingListId: Long) {
-        this.shoppingListId = shoppingListId
-        startShoppingListUpdates(shoppingListId)
+    override fun observeShoppingListId(shoppingListId: Long) {
+        observeShoppingList(shoppingListId)
+        observeShoppingItems(shoppingListId)
     }
 
-    private fun startShoppingListUpdates(shoppingListId: Long) {
-        this.shoppingListId = shoppingListId
+    private fun observeShoppingList(shoppingListId: Long) {
         compositeDisposable.add(
-            database.shoppingListDao().getShoppingListWithItemsById(shoppingListId)
+            database.shoppingListDao().getShoppingListById(shoppingListId)
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
                 .subscribeBy(
                     onNext = { shoppingList ->
-                        view.showShoppingListName(shoppingList.shoppingList!!.listName)
-                        view.updateList(shoppingList.shoppingItems)
+                        view.showShoppingListName(shoppingList.listName)
                     },
                     onError = { error -> Timber.e(error) }
                 )
         )
     }
 
-    override fun addShoppingItem(shoppingItemName: String) {
+    private fun observeShoppingItems(shoppingListId: Long) {
+        compositeDisposable.add(
+            database.shoppingListDao().getShoppingItemsByParentId(shoppingListId)
+                .subscribeOn(schedulers.io())
+                .observeOn(schedulers.ui())
+                .subscribeBy(
+                    onNext = { shoppingItems ->
+                        view.updateList(shoppingItems)
+                    },
+                    onError = { error -> Timber.e(error) }
+                )
+        )
+    }
+
+    override fun observeAddNewItemEditText(observable: InitialValueObservable<CharSequence>) {
+        compositeDisposable.add(
+            observable.subscribeBy { view.setAddNewItemVisible(it.isNotBlank()) }
+        )
+    }
+
+    override fun addShoppingItem(shoppingListId: Long, shoppingItemName: String) {
+        view.cleanAddNewItemField()
         if (shoppingItemName.isNotBlank()) {
             Completable.fromAction {
-                database.shoppingListDao().insertOrUpdate(ShoppingItem(shoppingListId, shoppingItemName))
+                database.shoppingListDao().insertOrUpdate(
+                    ShoppingItem(shoppingListId, shoppingItemName.capitalize())
+                )
             }.subscribeOn(schedulers.io()).subscribe()
         }
     }
@@ -64,9 +84,15 @@ class ListDetailsPresenter @Inject constructor(
         }.subscribeOn(schedulers.io()).subscribe()
     }
 
-    override fun setShoppingItemCompleted(shoppingItem: ShoppingItem, completed: Boolean) {
+    override fun changeShoppingListCompletedState(shoppingItem: ShoppingItem) {
         Completable.fromAction {
-            database.shoppingListDao().setShoppingItemAsCompleted(shoppingItem.id!!, completed)
+            database.shoppingListDao().setShoppingItemAsCompleted(shoppingItem.id!!, !shoppingItem.isCompleted)
         }.subscribeOn(schedulers.io()).subscribe()
+    }
+
+    override fun changeShoppingItemName(shoppingItem: ShoppingItem, newName: String) {
+        Completable.fromAction {
+
+        }
     }
 }

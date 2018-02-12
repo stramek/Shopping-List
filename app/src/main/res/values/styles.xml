@@ -20,5 +20,10 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    
+    <style name="DefaultAppCompatCheckBox" parent="Base.Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:textColor">@color/defaultTextColor</item>
+        <item name="android:textSize">@dimen/default_checkbox_text_size</item>
+    </style>
 
 </resources>

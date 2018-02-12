@@ -8,12 +8,16 @@ import pl.marcinstramowski.shoppinglist.screens.base.BaseContract
 interface MainContract {
 
     interface View : BaseContract.View<Presenter> {
+
         fun showAddNewListDialog()
+
     }
 
     interface Presenter : BaseContract.Presenter {
+
         fun onFabButtonClick()
 
         fun createNewList(listName: String)
+
     }
 }

@@ -9,14 +9,6 @@ import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
 @Dao
 abstract class ShoppingListDao {
 
-    @Transaction
-    @Query("SELECT * FROM shoppingList WHERE archived = 0 ORDER BY lastModificationDate DESC")
-    abstract fun getCurrentListsWithItems(): Flowable<List<ShoppingListWithItems>>
-
-    @Transaction
-    @Query("SELECT * FROM shoppingList WHERE archived = 1 ORDER BY lastModificationDate DESC")
-    abstract fun getArchivedListsWithItems(): Flowable<List<ShoppingListWithItems>>
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertOrUpdate(shoppingList: ShoppingList): Long
 
@@ -26,12 +18,6 @@ abstract class ShoppingListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     abstract fun insertOrUpdate(shoppingItems: List<ShoppingItem>): List<Long>
 
-    @Query("SELECT * FROM shoppingList WHERE id = :id LIMIT 1")
-    abstract fun getShoppingListById(id: Long): Flowable<ShoppingList>
-
-    @Transaction
-    @Query("SELECT * FROM shoppingList WHERE id = :id LIMIT 1")
-    abstract fun getShoppingListWithItemsById(id: Long): Flowable<ShoppingListWithItems>
 
     @Delete
     abstract fun delete(vararg shoppingLists: ShoppingList)
@@ -39,11 +25,25 @@ abstract class ShoppingListDao {
     @Delete
     abstract fun delete(vararg shoppingItems: ShoppingItem)
 
-    @Query("DELETE FROM shoppingList")
-    abstract fun deleteAll()
-
     @Query("DELETE FROM shoppingitem WHERE shoppingListId = :shoppingListId")
     abstract fun deleteShoppingListItems(shoppingListId: Long)
+
+
+    @Transaction
+    @Query("SELECT * FROM shoppingList WHERE archived = 0 ORDER BY lastModificationDate DESC")
+    abstract fun getCurrentListsWithItems(): Flowable<List<ShoppingListWithItems>>
+
+    @Transaction
+    @Query("SELECT * FROM shoppingList WHERE archived = 1 ORDER BY lastModificationDate DESC")
+    abstract fun getArchivedListsWithItems(): Flowable<List<ShoppingListWithItems>>
+
+    @Transaction
+    @Query("SELECT * FROM shoppingList WHERE id = :id LIMIT 1")
+    abstract fun getShoppingListWithItemsById(id: Long): Flowable<ShoppingListWithItems>
+
+
+    @Query("SELECT * FROM shoppingList WHERE id = :id LIMIT 1")
+    abstract fun getShoppingListById(id: Long): Flowable<ShoppingList>
 
     @Query("UPDATE shoppingList SET archived = 1 WHERE id = :shoppingListId")
     abstract fun archiveShoppingList(shoppingListId: Long)
@@ -51,8 +51,13 @@ abstract class ShoppingListDao {
     @Query("UPDATE shoppingList SET archived = 1 WHERE id IN (:shoppingListIds)")
     abstract fun archiveShoppingLists(vararg shoppingListIds: Long)
 
+
     @Query("UPDATE shoppingItem SET isCompleted = :completed WHERE id = :shoppingItemId")
     abstract fun setShoppingItemAsCompleted(shoppingItemId: Long, completed: Boolean)
+
+    @Query("SELECT * FROM shoppingItem WHERE shoppingListId = :shoppingListId ORDER BY isCompleted ASC, itemName ASC")
+    abstract fun getShoppingItemsByParentId(shoppingListId: Long): Flowable<List<ShoppingItem>>
+
 
     @Transaction
     open fun deleteShoppingListWithItems(shoppingList: ShoppingList) {
