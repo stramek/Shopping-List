@@ -7,12 +7,13 @@ import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import dagger.android.support.AndroidSupportInjectionModule
 import pl.marcinstramowski.shoppinglist.database.DatabaseModule
+import pl.marcinstramowski.shoppinglist.database.DatabaseSourcesBindingModule
 import javax.inject.Singleton
 
 @Singleton
 @Component(modules = [
     ApplicationModule::class, ActivityBindingModule::class, FragmentBindingModule::class,
-    AndroidSupportInjectionModule::class, DatabaseModule::class
+    AndroidSupportInjectionModule::class, DatabaseModule::class, DatabaseSourcesBindingModule::class
 ])
 interface AppComponent : AndroidInjector<DaggerApplication> {
 

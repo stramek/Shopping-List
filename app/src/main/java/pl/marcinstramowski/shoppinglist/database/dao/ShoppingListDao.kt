@@ -28,6 +28,9 @@ abstract class ShoppingListDao {
     @Query("DELETE FROM shoppingitem WHERE shoppingListId = :shoppingListId")
     abstract fun deleteShoppingListItems(shoppingListId: Long)
 
+    @Query("DELETE FROM shoppingList WHERE id = :shoppingListId")
+    abstract fun deleteShoppingListById(shoppingListId: Long)
+
 
     @Transaction
     @Query("SELECT * FROM shoppingList WHERE archived = 0 ORDER BY lastModificationDate DESC")
@@ -54,6 +57,9 @@ abstract class ShoppingListDao {
     @Query("UPDATE shoppingItem SET itemName = :newName WHERE id = :shoppingItemId")
     abstract fun updateShoppingItemName(shoppingItemId: Long, newName: String)
 
+    @Query("UPDATE shoppingList SET listName = :newName WHERE id = :shoppingListId")
+    abstract fun updateShoppingListName(shoppingListId: Long, newName: String)
+
     @Query("UPDATE shoppingList SET lastModificationDate = :modificationDate WHERE id = :shoppingListId")
     abstract fun updateShoppingListModification(shoppingListId: Long, modificationDate: Date = Date())
 
@@ -64,10 +70,27 @@ abstract class ShoppingListDao {
     @Query("SELECT * FROM shoppingItem WHERE shoppingListId = :shoppingListId ORDER BY isCompleted ASC, itemName ASC")
     abstract fun getShoppingItemsByParentId(shoppingListId: Long): Flowable<List<ShoppingItem>>
 
+    @Transaction
+    open fun archiveListRefreshTime(shoppingList: ShoppingList) {
+        archiveShoppingList(shoppingList.getUniqueId())
+        updateShoppingListModification(shoppingList.getUniqueId())
+    }
+
+    @Transaction
+    open fun updateShoppingListNameRefreshTime(shoppingListId: Long, newName: String) {
+        updateShoppingListName(shoppingListId, newName)
+        updateShoppingListModification(shoppingListId)
+    }
+
+    @Transaction
+    open fun updateShoppingListNameRefreshTime(shoppingList: ShoppingList, newName: String) {
+        updateShoppingListName(shoppingList.getUniqueId(), newName)
+        updateShoppingListModification(shoppingList.getUniqueId())
+    }
 
     @Transaction
     open fun updateShoppingItemNameRefreshTime(shoppingItem: ShoppingItem, newName: String) {
-        updateShoppingItemName(shoppingItem.id!!, newName)
+        updateShoppingItemName(shoppingItem.getUniqueId(), newName)
         updateShoppingListModification(shoppingItem.shoppingListId)
     }
 
@@ -85,13 +108,19 @@ abstract class ShoppingListDao {
 
     @Transaction
     open fun setShoppingItemAsCompletedUpdateTime(shoppingItem: ShoppingItem, completed: Boolean) {
-        setShoppingItemAsCompleted(shoppingItem.id!!, completed)
+        setShoppingItemAsCompleted(shoppingItem.getUniqueId(), completed)
         updateShoppingListModification(shoppingItem.shoppingListId)
     }
 
     @Transaction
     open fun deleteShoppingListWithItems(shoppingList: ShoppingList) {
-        deleteShoppingListItems(shoppingList.id!!)
+        deleteShoppingListItems(shoppingList.getUniqueId())
         delete(shoppingList)
+    }
+
+    @Transaction
+    open fun deleteShoppingListWithItemsById(shoppingListId: Long) {
+        deleteShoppingListItems(shoppingListId)
+        deleteShoppingListById(shoppingListId)
     }
 }

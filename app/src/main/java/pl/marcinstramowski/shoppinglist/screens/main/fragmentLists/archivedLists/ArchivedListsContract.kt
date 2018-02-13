@@ -1,5 +1,6 @@
 package pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.archivedLists
 
+import pl.marcinstramowski.shoppinglist.database.model.ShoppingList
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
 import pl.marcinstramowski.shoppinglist.screens.base.BaseContract
 
@@ -14,11 +15,13 @@ interface ArchivedListsContract {
 
         fun showListDetailsScreen(shoppingListId: Long)
 
+        fun showContextMenu(shoppingList: ShoppingList)
+
     }
 
     interface Presenter : BaseContract.Presenter {
 
-        fun deleteList(shoppingListWithItems: ShoppingListWithItems)
+        fun deleteList(shoppingList: ShoppingList?)
 
         fun onShoppingListClick(shoppingListWithItems: ShoppingListWithItems)
 

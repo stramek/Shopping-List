@@ -2,9 +2,12 @@ package pl.marcinstramowski.shoppinglist.screens.listDetails
 
 import android.os.Bundle
 import android.support.v7.util.DiffUtil
+import android.support.v7.view.ActionMode
 import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.view.KeyEvent
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageView
@@ -25,7 +28,7 @@ import javax.inject.Inject
 
 
 class ListDetailsActivity : BaseActivity<ListDetailsContract.Presenter>(),
-    ListDetailsContract.View, TextView.OnEditorActionListener {
+    ListDetailsContract.View, TextView.OnEditorActionListener, ActionMode.Callback {
 
     companion object {
         const val SHOPPING_LIST_ID_KEY = "SHOPPING_LIST_ID_KEY"
@@ -36,8 +39,11 @@ class ListDetailsActivity : BaseActivity<ListDetailsContract.Presenter>(),
 
     override val contentViewId = R.layout.activity_list_details
 
+    private var actionMode: ActionMode? = null
+    private var selectedShoppingItem: ShoppingItem? = null
+
     private lateinit var lastAdapter: LastAdapter
-    private val adapterList = ArrayList<ShoppingItem>()
+    private val adapterList = mutableListOf<ShoppingItem>()
 
     private var isEditable: Boolean = true
     private var shoppingListId: Long = -1
@@ -54,6 +60,45 @@ class ListDetailsActivity : BaseActivity<ListDetailsContract.Presenter>(),
         addButton.setOnClickListener {
             presenter.addShoppingItem(shoppingListId, productEditText.text.toString())
         }
+    }
+
+    private fun configureShoppingListAdapter() {
+        listContainer.layoutManager = LinearLayoutManager(this)
+        listContainer.addItemDecoration(
+            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+        )
+        lastAdapter = LastAdapter(adapterList, BR.item)
+            .map<ShoppingItem, ItemShoppingItemBinding>(R.layout.item_shopping_item) {
+                onBind {
+                    val removeButton = it.binding.removeButton
+                    val root = it.binding.root
+                    val item = it.binding.item
+                    item?.let { configureShoppingItem(removeButton, root, item) }
+                }
+            }
+            .into(listContainer)
+    }
+
+    private fun configureShoppingItem(removeButton: ImageView, root: View, shoppingItem: ShoppingItem) {
+        removeButton.setVisible(isEditable)
+        if (!isEditable) return
+        removeButton.setOnClickListener { presenter.removeShoppingItem(shoppingItem) }
+        root.setOnClickListener {
+            if (actionMode != null) {
+                actionMode?.finish()
+            } else {
+                presenter.changeShoppingListCompletedState(shoppingItem)
+            }
+        }
+        root.setOnLongClickListener {
+            presenter.onLongShoppingItemClick(shoppingItem)
+            true
+        }
+    }
+
+    override fun showContextMenu(shoppingItem: ShoppingItem) {
+        actionMode = startSupportActionMode(this)
+        selectedShoppingItem = shoppingItem
     }
 
     override fun onStart() {
@@ -83,36 +128,6 @@ class ListDetailsActivity : BaseActivity<ListDetailsContract.Presenter>(),
         supportActionBar?.title = name
     }
 
-    private fun configureShoppingListAdapter() {
-        listContainer.layoutManager = LinearLayoutManager(this)
-        listContainer.addItemDecoration(
-            DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-        )
-        lastAdapter = LastAdapter(adapterList, BR.item)
-            .map<ShoppingItem, ItemShoppingItemBinding>(R.layout.item_shopping_item) {
-                onBind {
-                    val removeButton = it.binding.removeButton
-                    val root = it.binding.root
-                    val item = it.binding.item
-                    item?.let {
-                        configureShoppingItem(removeButton, root, item)
-                        root.setOnLongClickListener {
-                            presenter.onLongShoppingItemClick(item)
-                            true
-                        }
-                    }
-                }
-            }
-            .into(listContainer)
-    }
-
-    private fun configureShoppingItem(removeButton: ImageView, root: View, shoppingItem: ShoppingItem) {
-        removeButton.setVisible(isEditable)
-        if (!isEditable) return
-        removeButton.setOnClickListener { presenter.removeShoppingItem(shoppingItem) }
-        root.setOnClickListener { presenter.changeShoppingListCompletedState(shoppingItem) }
-    }
-
     override fun updateList(shoppingLists: List<ShoppingItem>) {
         listContainer.visibility = View.VISIBLE
         val diffCallback = GenericDiffCallback(adapterList, shoppingLists)
@@ -130,5 +145,32 @@ class ListDetailsActivity : BaseActivity<ListDetailsContract.Presenter>(),
                 presenter.changeShoppingItemName(shoppingItem, text)
             }
         )
+    }
+
+    override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_edit -> {
+                showTextInputDialog(R.string.dialog_change_list_name, { newName ->
+                    presenter.changeShoppingItemName(selectedShoppingItem, newName)
+                })
+                mode.finish()
+                true
+            }
+            else -> false
+        }
+    }
+
+    override fun onCreateActionMode(mode: ActionMode, menu: Menu?): Boolean {
+        val inflater = mode.menuInflater
+        inflater.inflate(R.menu.details_list_context_menu, menu)
+        return true
+    }
+
+    override fun onPrepareActionMode(mode: ActionMode?, menu: Menu?): Boolean {
+        return false
+    }
+
+    override fun onDestroyActionMode(mode: ActionMode?) {
+        actionMode = null
     }
 }

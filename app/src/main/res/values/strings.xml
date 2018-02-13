@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">Shopping List</string>
 
+    <string name="app_name">Shopping List</string>
     <string name="current_lists_title">Current</string>
     <string name="archived_lists_title">Archived</string>
     <string name="list_details_type_product_do_add">Type product do add</string>
@@ -9,5 +9,15 @@
     <string name="cancel">Cancel</string>
     <string name="dialog_name_hint">Name</string>
     <string name="dialog_change_item_name">Insert new item name</string>
+    <string name="dialog_change_list_name">Insert new list name</string>
+    <string name="menu_archive">Archive</string>
+    <string name="menu_edit_name">Edit name</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_delete">Delete</string>
+
+    <string name="current_notes_empty_message">Active shopping lists\nwill appear here</string>
+    <string name="archived_notes_empty_message">Archived shopping lists\nwill appear here</string>
+    <string name="shopping_item_remove_shopping_item_button_description">Remove shopping item button</string>
+    <string name="list_details_add_new_shopping_item_description">Add new shopping item</string>
 
 </resources>

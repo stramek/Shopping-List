@@ -23,6 +23,11 @@
             app:popupTheme="@style/AppTheme.PopupOverlay"
             app:title="@string/app_name" />
 
+        <ViewStub
+            android:id="@+id/cab_stub"
+            android:layout_width="match_parent"
+            android:layout_height="?actionBarSize" />
+
         <android.support.v7.widget.CardView
             android:id="@+id/addItemSection"
             android:layout_width="match_parent"
@@ -60,6 +65,7 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center_vertical"
                     android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/list_details_add_new_shopping_item_description"
                     android:padding="12dp"
                     app:srcCompat="@drawable/ic_add_grey" />
 

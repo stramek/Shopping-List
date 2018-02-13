@@ -1,10 +1,10 @@
 package pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.archivedLists
 
-import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
-import pl.marcinstramowski.shoppinglist.database.AppDatabase
+import pl.marcinstramowski.shoppinglist.database.model.ShoppingList
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
+import pl.marcinstramowski.shoppinglist.database.sources.ShoppingListDataSource
 import pl.marcinstramowski.shoppinglist.rxSchedulers.SchedulerProvider
 import timber.log.Timber
 import javax.inject.Inject
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class ArchivedListsPresenter @Inject constructor(
     private val view: ArchivedListsContract.View,
     private val schedulers: SchedulerProvider,
-    private val database: AppDatabase
+    private val shoppingListSource: ShoppingListDataSource
 ) : ArchivedListsContract.Presenter {
 
     private val compositeDisposable = CompositeDisposable()
@@ -30,7 +30,7 @@ class ArchivedListsPresenter @Inject constructor(
 
     private fun subscribeShoppingLists() {
         compositeDisposable.add(
-            database.shoppingListDao().getArchivedListsWithItems()
+            shoppingListSource.observeArchivedListsWithItems()
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
                 .subscribeBy(
@@ -40,19 +40,17 @@ class ArchivedListsPresenter @Inject constructor(
         )
     }
 
-    override fun deleteList(shoppingListWithItems: ShoppingListWithItems) {
-        Completable.fromAction {
-            database.shoppingListDao().deleteShoppingListWithItems(shoppingListWithItems.shoppingList!!)
-        }.subscribeOn(schedulers.io()).subscribe()
+    override fun deleteList(shoppingList: ShoppingList?) {
+        shoppingList?.let { shoppingListSource.deleteShoppingList(shoppingList )}
     }
 
     override fun onShoppingListClick(shoppingListWithItems: ShoppingListWithItems) {
-        shoppingListWithItems.shoppingList?.id?.let {
-            view.showListDetailsScreen(it)
-        }
+        view.showListDetailsScreen(shoppingListWithItems.getUniqueId())
     }
 
     override fun onLongShoppingListClick(shoppingListWithItems: ShoppingListWithItems) {
-
+        shoppingListWithItems.shoppingList?.let {
+            view.showContextMenu(it)
+        }
     }
 }

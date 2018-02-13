@@ -4,14 +4,19 @@ import android.arch.persistence.room.Entity
 import android.arch.persistence.room.PrimaryKey
 import android.arch.persistence.room.TypeConverters
 import pl.marcinstramowski.shoppinglist.database.converters.DateConverter
+import pl.marcinstramowski.shoppinglist.utils.UniqueId
 import java.util.*
 
 @Entity
 class ShoppingList(
-    val listName: String
-) {
+    var listName: String
+) : UniqueId {
+
     @PrimaryKey(autoGenerate = true) var id: Long? = null
+
     var archived: Boolean = false
+
+    override fun getUniqueId() = id!!
 
     @TypeConverters(DateConverter::class) var lastModificationDate: Date? = Date()
 

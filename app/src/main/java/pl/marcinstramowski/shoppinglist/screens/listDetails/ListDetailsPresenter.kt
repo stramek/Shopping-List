@@ -1,11 +1,10 @@
 package pl.marcinstramowski.shoppinglist.screens.listDetails
 
 import com.jakewharton.rxbinding2.InitialValueObservable
-import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
-import pl.marcinstramowski.shoppinglist.database.AppDatabase
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingItem
+import pl.marcinstramowski.shoppinglist.database.sources.ShoppingListDataSource
 import pl.marcinstramowski.shoppinglist.rxSchedulers.SchedulerProvider
 import timber.log.Timber
 import javax.inject.Inject
@@ -16,11 +15,10 @@ import javax.inject.Inject
 class ListDetailsPresenter @Inject constructor(
     val view: ListDetailsContract.View,
     private val schedulers: SchedulerProvider,
-    private val database: AppDatabase
+    private val shoppingListSource: ShoppingListDataSource
 ) : ListDetailsContract.Presenter {
 
     private val compositeDisposable = CompositeDisposable()
-
 
     override fun onAttach() {}
 
@@ -35,13 +33,11 @@ class ListDetailsPresenter @Inject constructor(
 
     private fun observeShoppingList(shoppingListId: Long) {
         compositeDisposable.add(
-            database.shoppingListDao().getShoppingListById(shoppingListId)
+            shoppingListSource.observeShoppingListById(shoppingListId)
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
                 .subscribeBy(
-                    onNext = { shoppingList ->
-                        view.showShoppingListName(shoppingList.listName)
-                    },
+                    onNext = { shoppingList -> view.showShoppingListName(shoppingList.listName) },
                     onError = { error -> Timber.e(error) }
                 )
         )
@@ -49,13 +45,11 @@ class ListDetailsPresenter @Inject constructor(
 
     private fun observeShoppingItems(shoppingListId: Long) {
         compositeDisposable.add(
-            database.shoppingListDao().getShoppingItemsByParentId(shoppingListId)
+            shoppingListSource.observeShoppingItemsByListId(shoppingListId)
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
                 .subscribeBy(
-                    onNext = { shoppingItems ->
-                        view.updateList(shoppingItems)
-                    },
+                    onNext = { shoppingItems -> view.updateList(shoppingItems) },
                     onError = { error -> Timber.e(error) }
                 )
         )
@@ -70,33 +64,25 @@ class ListDetailsPresenter @Inject constructor(
     override fun addShoppingItem(shoppingListId: Long, shoppingItemName: String) {
         view.cleanAddNewItemField()
         if (shoppingItemName.isNotBlank()) {
-            Completable.fromAction {
-                database.shoppingListDao().insertOrUpdateRefreshTime(
-                    ShoppingItem(shoppingListId, shoppingItemName.capitalize())
-                )
-            }.subscribeOn(schedulers.io()).subscribe()
+            shoppingListSource.insertOrUpdateShoppingItem(
+                ShoppingItem(shoppingListId, shoppingItemName.capitalize())
+            )
         }
     }
 
     override fun removeShoppingItem(shoppingItem: ShoppingItem) {
-        Completable.fromAction {
-            database.shoppingListDao().deleteRefreshTime(shoppingItem)
-        }.subscribeOn(schedulers.io()).subscribe()
+        shoppingListSource.deleteShoppingItem(shoppingItem)
     }
 
     override fun changeShoppingListCompletedState(shoppingItem: ShoppingItem) {
-        Completable.fromAction {
-            database.shoppingListDao().setShoppingItemAsCompletedUpdateTime(shoppingItem, !shoppingItem.isCompleted)
-        }.subscribeOn(schedulers.io()).subscribe()
+        shoppingListSource.setShoppingItemCompleted(shoppingItem, !shoppingItem.isCompleted)
     }
 
-    override fun changeShoppingItemName(shoppingItem: ShoppingItem, newName: String) {
-        Completable.fromAction {
-            database.shoppingListDao().updateShoppingItemNameRefreshTime(shoppingItem, newName)
-        }.subscribeOn(schedulers.io()).subscribe()
+    override fun changeShoppingItemName(shoppingItem: ShoppingItem?, newName: String) {
+        shoppingItem?.let { shoppingListSource.updateShoppingItemName(it, newName) }
     }
 
     override fun onLongShoppingItemClick(shoppingItem: ShoppingItem) {
-        view.showChangeItemNameDialog(shoppingItem)
+        view.showContextMenu(shoppingItem)
     }
 }

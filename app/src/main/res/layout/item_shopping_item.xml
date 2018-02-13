@@ -17,8 +17,6 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:orientation="horizontal"
-        android:clickable="true"
-        android:focusable="true"
         android:padding="@dimen/margin_normal">
 
         <android.support.v7.widget.AppCompatCheckBox
@@ -40,6 +38,7 @@
             android:layout_height="@dimen/list_item_icon_size"
             android:layout_gravity="center_vertical"
             android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/shopping_item_remove_shopping_item_button_description"
             android:clickable="true"
             android:focusable="true"
             android:padding="12dp"

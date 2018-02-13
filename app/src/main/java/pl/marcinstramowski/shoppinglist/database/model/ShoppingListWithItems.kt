@@ -18,6 +18,7 @@ class ShoppingListWithItems : UniqueId {
     fun getNumberOfItems() = shoppingItems.size
 
     override fun getUniqueId() = shoppingList!!.id!!
+
     override fun equals(other: Any?): Boolean {
 
         if (this === other) return true

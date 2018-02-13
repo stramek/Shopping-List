@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import android.support.v7.util.DiffUtil
 import android.support.v7.widget.LinearLayoutManager
-import android.view.View
 import com.github.nitrico.lastadapter.LastAdapter
 import kotlinx.android.synthetic.main.fragment_list.*
 import pl.marcinstramowski.shoppinglist.BR
 import pl.marcinstramowski.shoppinglist.R
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
 import pl.marcinstramowski.shoppinglist.databinding.ItemShoppingListBinding
+import pl.marcinstramowski.shoppinglist.extensions.setVisible
 import pl.marcinstramowski.shoppinglist.screens.base.BaseContract
 import pl.marcinstramowski.shoppinglist.screens.base.BaseFragment
 import pl.marcinstramowski.shoppinglist.utils.GenericDiffCallback
@@ -23,12 +23,14 @@ abstract class BaseListFragment<out T : BaseContract.Presenter> : BaseFragment<T
     BaseContract.View<T> {
 
     override val contentViewId = R.layout.fragment_list
+    abstract val emptyListMessageRes: Int
 
     private lateinit var lastAdapter: LastAdapter
     private val adapterList = ArrayList<UniqueId>()
 
     @CallSuper
     override fun onCreated(savedInstanceState: Bundle?) {
+        emptyListMessage.text = getText(emptyListMessageRes)
         configureShoppingListAdapter()
     }
 
@@ -49,7 +51,8 @@ abstract class BaseListFragment<out T : BaseContract.Presenter> : BaseFragment<T
 
     @CallSuper
     fun updateList(shoppingLists: List<ShoppingListWithItems>) {
-        listContainer.visibility = View.VISIBLE
+        listContainer.setVisible(true)
+        emptyListMessage.setVisible(shoppingLists.isEmpty())
         val diffCallback = GenericDiffCallback(adapterList, shoppingLists)
         DiffUtil.calculateDiff(diffCallback).dispatchUpdatesTo(lastAdapter)
         adapterList.apply { clear() }.addAll(shoppingLists)

@@ -1,10 +1,10 @@
 package pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.currentLists
 
-import io.reactivex.Completable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.rxkotlin.subscribeBy
-import pl.marcinstramowski.shoppinglist.database.AppDatabase
+import pl.marcinstramowski.shoppinglist.database.model.ShoppingList
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
+import pl.marcinstramowski.shoppinglist.database.sources.ShoppingListDataSource
 import pl.marcinstramowski.shoppinglist.rxSchedulers.SchedulerProvider
 import timber.log.Timber
 import javax.inject.Inject
@@ -15,7 +15,7 @@ import javax.inject.Inject
 class CurrentListsPresenter @Inject constructor(
     private val view: CurrentListsContract.View,
     private val schedulers: SchedulerProvider,
-    private val database: AppDatabase
+    private val shoppingListSource: ShoppingListDataSource
 ) : CurrentListsContract.Presenter {
 
     private val compositeDisposable = CompositeDisposable()
@@ -30,7 +30,7 @@ class CurrentListsPresenter @Inject constructor(
 
     private fun subscribeShoppingLists() {
         compositeDisposable.add(
-            database.shoppingListDao().getCurrentListsWithItems()
+            shoppingListSource.observeCurrentListsWithItems()
                 .subscribeOn(schedulers.io())
                 .observeOn(schedulers.ui())
                 .subscribeBy(
@@ -40,20 +40,19 @@ class CurrentListsPresenter @Inject constructor(
         )
     }
 
-    override fun archiveList(shoppingListWithItems: ShoppingListWithItems) {
-        Completable
-            .fromAction { database.shoppingListDao().archiveShoppingList(shoppingListWithItems.getUniqueId()) }
-            .subscribeOn(schedulers.io())
-            .subscribe()
+    override fun archiveList(shoppingList: ShoppingList?) {
+        shoppingList?.let { shoppingListSource.archiveShoppingList(it) }
+    }
+
+    override fun editListName(shoppingList: ShoppingList?, newName: String) {
+        shoppingList?.let { shoppingListSource.updateShoppingListName(shoppingList, newName) }
     }
 
     override fun onShoppingListClick(shoppingListWithItems: ShoppingListWithItems) {
-        shoppingListWithItems.shoppingList?.id?.let {
-            view.showListDetailsScreen(it)
-        }
+        view.showListDetailsScreen(shoppingListWithItems.getUniqueId())
     }
 
-    override fun onLongShoppingListClock(shoppingListWithItems: ShoppingListWithItems) {
-
+    override fun onLongShoppingListClick(shoppingListWithItems: ShoppingListWithItems) {
+        shoppingListWithItems.shoppingList?.let { view.showContextMenu(it) }
     }
 }

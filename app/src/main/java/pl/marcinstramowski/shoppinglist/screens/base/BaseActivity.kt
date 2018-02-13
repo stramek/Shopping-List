@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.support.annotation.CallSuper
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
-import pl.marcinstramowski.shoppinglist.R
 
 /**
  * Base application activity

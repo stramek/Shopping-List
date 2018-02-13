@@ -1,5 +1,6 @@
 package pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.currentLists
 
+import pl.marcinstramowski.shoppinglist.database.model.ShoppingList
 import pl.marcinstramowski.shoppinglist.database.model.ShoppingListWithItems
 import pl.marcinstramowski.shoppinglist.screens.base.BaseContract
 
@@ -14,15 +15,19 @@ interface CurrentListsContract {
 
         fun showListDetailsScreen(shoppingListId: Long)
 
+        fun showContextMenu(shoppingList: ShoppingList)
+
     }
 
     interface Presenter : BaseContract.Presenter {
 
-        fun archiveList(shoppingListWithItems: ShoppingListWithItems)
+        fun archiveList(shoppingList: ShoppingList?)
+
+        fun editListName(shoppingList: ShoppingList?, newName: String)
 
         fun onShoppingListClick(shoppingListWithItems: ShoppingListWithItems)
 
-        fun onLongShoppingListClock(shoppingListWithItems: ShoppingListWithItems)
+        fun onLongShoppingListClick(shoppingListWithItems: ShoppingListWithItems)
 
     }
 }

@@ -4,6 +4,7 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import dagger.Module
 import dagger.Provides
+import pl.marcinstramowski.shoppinglist.database.dao.ShoppingListDao
 import javax.inject.Singleton
 
 @Module
@@ -16,5 +17,9 @@ class DatabaseModule {
             .fallbackToDestructiveMigration()
             .build()
     }
+
+    @Provides
+    @Singleton
+    fun providesShoppingListDao(appDatabase: AppDatabase): ShoppingListDao = appDatabase.shoppingListDao()
 
 }

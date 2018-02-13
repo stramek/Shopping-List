@@ -1,6 +1,7 @@
 package pl.marcinstramowski.shoppinglist.screens.base
 
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,4 +41,6 @@ abstract class BaseFragment<out T : BaseContract.Presenter> : DaggerFragment(),
         presenter.onDetach()
         super.onStop()
     }
+
+    fun getCompatActivity() = activity as AppCompatActivity
 }
