@@ -11,7 +11,7 @@ fun Activity.showTextInputDialog(@StringRes titleRes: Int, onTextProvided: (Stri
     AlertDialog.Builder(this)
         .setTitle(getString(titleRes))
         .setView(LayoutInflater.from(this).inflate(R.layout.dialog_add_list, null))
-        .setPositiveButton(R.string.ok, { dialog, which ->
+        .setPositiveButton(R.string.ok, { dialog, _ ->
             val listNameEditText = (dialog as AlertDialog).findViewById<AppCompatEditText>(R.id.listNameEditText)
             val text = listNameEditText?.text.toString()
             if (text.isNotBlank()) { onTextProvided(text) }
