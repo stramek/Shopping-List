@@ -1,4 +1,4 @@
-package pl.marcinstramowski.shoppinglist.di
+package pl.marcinstramowski.shoppinglist.di.scopes
 
 import javax.inject.Scope
 

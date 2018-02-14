@@ -2,7 +2,7 @@ package pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.archivedList
 
 import dagger.Binds
 import dagger.Module
-import pl.marcinstramowski.shoppinglist.di.FragmentScoped
+import pl.marcinstramowski.shoppinglist.di.scopes.FragmentScoped
 
 /**
  * Specifies classes delivered by dagger when injecting [ArchivedListsContract] interfaces.

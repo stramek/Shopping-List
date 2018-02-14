@@ -38,7 +38,7 @@ class CurrentListsFragment : BaseListFragment<CurrentListsContract.Presenter>(),
     }
 
     override fun onLongItemClick(shoppingListWithItems: ShoppingListWithItems) {
-        presenter.onLongShoppingListClick(shoppingListWithItems)
+        presenter.onShoppingListLongClick(shoppingListWithItems)
     }
 
     override fun showContextMenu(shoppingList: ShoppingList) {

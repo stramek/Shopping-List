@@ -1,4 +1,4 @@
-package pl.marcinstramowski.shoppinglist.di
+package pl.marcinstramowski.shoppinglist.di.modules
 
 import android.app.Application
 import android.content.Context

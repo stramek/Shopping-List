@@ -27,7 +27,7 @@ interface CurrentListsContract {
 
         fun onShoppingListClick(shoppingListWithItems: ShoppingListWithItems)
 
-        fun onLongShoppingListClick(shoppingListWithItems: ShoppingListWithItems)
+        fun onShoppingListLongClick(shoppingListWithItems: ShoppingListWithItems)
 
     }
 }

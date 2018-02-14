@@ -1,7 +1,8 @@
-package pl.marcinstramowski.shoppinglist.di
+package pl.marcinstramowski.shoppinglist.di.modules
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import pl.marcinstramowski.shoppinglist.di.scopes.ActivityScoped
 import pl.marcinstramowski.shoppinglist.screens.listDetails.ListDetailsActivity
 import pl.marcinstramowski.shoppinglist.screens.listDetails.ListDetailsModule
 import pl.marcinstramowski.shoppinglist.screens.main.MainActivity

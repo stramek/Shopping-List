@@ -52,7 +52,7 @@ class CurrentListsPresenter @Inject constructor(
         view.showListDetailsScreen(shoppingListWithItems.getUniqueId())
     }
 
-    override fun onLongShoppingListClick(shoppingListWithItems: ShoppingListWithItems) {
+    override fun onShoppingListLongClick(shoppingListWithItems: ShoppingListWithItems) {
         shoppingListWithItems.shoppingList?.let { view.showContextMenu(it) }
     }
 }

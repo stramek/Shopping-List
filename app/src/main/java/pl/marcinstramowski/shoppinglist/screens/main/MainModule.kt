@@ -1,6 +1,6 @@
 package pl.marcinstramowski.shoppinglist.screens.main
 
-import pl.marcinstramowski.shoppinglist.di.ActivityScoped
+import pl.marcinstramowski.shoppinglist.di.scopes.ActivityScoped
 import dagger.Binds
 import dagger.Module
 

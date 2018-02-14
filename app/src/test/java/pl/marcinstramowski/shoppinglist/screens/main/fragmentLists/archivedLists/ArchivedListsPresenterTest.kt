@@ -17,23 +17,29 @@ class ArchivedListsPresenterTest {
 
     private lateinit var presenter: ArchivedListsPresenter
 
-    private val mockShoppingListWithItems = ShoppingListWithItems().apply {
-        shoppingList = ShoppingList("List name").apply { id = 123 }
-        shoppingItems = listOf(
-            ShoppingItem(1, "Item name 1"),
-            ShoppingItem(2, "Item name 2")
-        )
-    }
-
-    private val mockShoppingLists = listOf(
-        mockShoppingListWithItems,
-        mockShoppingListWithItems
-    )
+    private lateinit var mockShoppingListWithItems: ShoppingListWithItems
+    private lateinit var mockShoppingLists: List<ShoppingListWithItems>
 
     @Before
     fun prepareTest() {
         presenter = ArchivedListsPresenter(
             view, TrampolineSchedulerProvider(), shoppingListDataSource
+        )
+        prepareMockValues()
+    }
+
+    private fun prepareMockValues() {
+        mockShoppingListWithItems = ShoppingListWithItems().apply {
+            shoppingList = ShoppingList("List name").apply { id = 123 }
+            shoppingItems = listOf(
+                ShoppingItem(1, "Item name 1"),
+                ShoppingItem(2, "Item name 2")
+            )
+        }
+
+        mockShoppingLists = listOf(
+            mockShoppingListWithItems,
+            mockShoppingListWithItems
         )
     }
 

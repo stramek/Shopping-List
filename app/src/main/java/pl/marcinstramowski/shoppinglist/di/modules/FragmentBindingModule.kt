@@ -1,7 +1,8 @@
-package pl.marcinstramowski.shoppinglist.di
+package pl.marcinstramowski.shoppinglist.di.modules
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import pl.marcinstramowski.shoppinglist.di.scopes.FragmentScoped
 import pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.archivedLists.ArchivedListsFragment
 import pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.archivedLists.ArchivedListsModule
 import pl.marcinstramowski.shoppinglist.screens.main.fragmentLists.currentLists.CurrentListsFragment

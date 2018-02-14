@@ -2,7 +2,7 @@ package pl.marcinstramowski.shoppinglist
 
 import com.squareup.leakcanary.LeakCanary
 import dagger.android.DaggerApplication
-import pl.marcinstramowski.shoppinglist.di.DaggerAppComponent
+import pl.marcinstramowski.shoppinglist.di.components.DaggerAppComponent
 import timber.log.Timber
 
 /**

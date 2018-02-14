@@ -1,4 +1,4 @@
-package pl.marcinstramowski.shoppinglist.database
+package pl.marcinstramowski.shoppinglist.di.modules
 
 import dagger.Binds
 import dagger.Module

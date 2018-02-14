@@ -1,4 +1,4 @@
-package pl.marcinstramowski.shoppinglist.di
+package pl.marcinstramowski.shoppinglist.di.components
 
 import android.app.Application
 import dagger.BindsInstance
@@ -6,8 +6,7 @@ import dagger.Component
 import dagger.android.AndroidInjector
 import dagger.android.DaggerApplication
 import dagger.android.support.AndroidSupportInjectionModule
-import pl.marcinstramowski.shoppinglist.database.DatabaseModule
-import pl.marcinstramowski.shoppinglist.database.DatabaseSourcesBindingModule
+import pl.marcinstramowski.shoppinglist.di.modules.*
 import javax.inject.Singleton
 
 @Singleton
