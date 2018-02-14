@@ -18,7 +18,7 @@
         android:layout_margin="@dimen/margin_normal"
         android:layout_gravity="center"
         android:textColor="@color/lightGrey"
-        android:textSize="18sp"
+        android:textSize="@dimen/empty_list_message_size"
         android:gravity="center"
         android:visibility="gone" />
 </FrameLayout>

@@ -41,7 +41,7 @@
             android:contentDescription="@string/shopping_item_remove_shopping_item_button_description"
             android:clickable="true"
             android:focusable="true"
-            android:padding="12dp"
+            android:padding="@dimen/material_icon_default_padding"
             app:srcCompat="@drawable/ic_close_grey" />
 
     </LinearLayout>
