@@ -60,6 +60,15 @@ class ShoppingListRepo @Inject constructor(
             )
     }
 
+    override fun insertOrUpdateShoppingList(shoppingList: ShoppingList) {
+        Completable.fromAction { shoppingListDao.insertOrUpdate(shoppingList) }
+            .subscribeOn(schedulers.io())
+            .observeOn(schedulers.io())
+            .subscribeBy(
+                onError = { Timber.e(it, "Error when inserting shopping list!") }
+            )
+    }
+
     override fun deleteShoppingItem(shoppingItem: ShoppingItem) {
         Completable.fromAction { shoppingListDao.deleteRefreshTime(shoppingItem) }
             .subscribeOn(schedulers.io())

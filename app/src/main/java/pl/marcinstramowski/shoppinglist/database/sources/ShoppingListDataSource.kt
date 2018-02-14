@@ -25,6 +25,8 @@ interface ShoppingListDataSource {
 
     fun insertOrUpdateShoppingItem(shoppingItem: ShoppingItem)
 
+    fun insertOrUpdateShoppingList(shoppingList: ShoppingList)
+
     fun deleteShoppingItem(shoppingItem: ShoppingItem)
 
     fun setShoppingItemCompleted(shoppingItem: ShoppingItem, completed: Boolean)
